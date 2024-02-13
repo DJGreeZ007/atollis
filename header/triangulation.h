@@ -20,7 +20,7 @@ namespace trng {
             int perform_triangulation(const std::string& _inputfile_name_XYZ_for_CGAL);
             int get_OBJ_file(std::string& _outputfile_name_OBJ);
         private:
-            const std::string ouput_file_name_OBJ{"tmp_output_wwf.obj"};
+            const std::string ouput_file_name_OBJ{"tmp_files/tmp_output_wwf.obj"};
             Mesh m;
     };
 }
