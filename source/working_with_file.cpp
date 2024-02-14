@@ -4,6 +4,21 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <vector>
+#include <iterator>
+
+/*
+* @name add_commas
+* 
+* @note The function of placing commas between coordinates.
+* Attention! The initial spaces are removed
+*
+* @param input The line in which you need to place commas.
+*
+* @return The comma-separated string.
+*/
+std::string add_commas(const std::string& _input);
+
 bool wwf::working_with_file::get_XYZ_file_for_CGAL(const std::string &_input_file_name, std::string& _output_file_name_xyz)
 {
     /* Files */
@@ -41,6 +56,7 @@ bool wwf::working_with_file::get_XYZ_file_for_CGAL(const std::string &_input_fil
 
     return true;
 }
+
 bool wwf::working_with_file::get_file_for_task(const std::string &_output_file_name_OBJ, const std::string &_output_file_name_for_task)
 {
     /* Files */
@@ -76,7 +92,8 @@ bool wwf::working_with_file::get_file_for_task(const std::string &_output_file_n
                 output_file_for_task << "* Nodes" << std::endl;
             }
             line = line.substr(1);
-            output_file_for_task << std::setw(7) << counter_vert << "." << line << std::endl;
+
+            output_file_for_task << std::setw(7) << counter_vert << ",  " << add_commas(line) << std::endl;
             counter_vert++;
             continue;
         }
@@ -88,12 +105,42 @@ bool wwf::working_with_file::get_file_for_task(const std::string &_output_file_n
                 output_file_for_task << std::endl << std::endl;
                 output_file_for_task << "* Elements" << std::endl;
             }
+            /* To do add commas to line */
             line = line.substr(1);
-            output_file_for_task << std::setw(7)<< counter_tr << "." << line << std::endl;
+            output_file_for_task << std::setw(7)<< counter_tr << ",  " << add_commas(line) << std::endl;
             counter_tr++;
             continue;
         }
     }
     
     return true;
+}
+
+
+std::string add_commas(const std::string& _input) {
+
+    std::string input{_input}; /*< Copy string */
+    
+    /* Removing initial spaces */
+    input.erase(0, input.find_first_not_of(' '));
+
+    std::istringstream iss(input);
+    std::ostringstream oss;
+    std::string token;
+    std::vector<std::string> tokens;
+
+    /* Splitting a string into tokens. */
+    std::copy(std::istream_iterator<std::string>(iss),
+              std::istream_iterator<std::string>(),
+              std::back_inserter(tokens));
+
+    /* Collecting a string with commas. */
+    for (size_t i = 0; i < tokens.size(); ++i) {
+        oss << tokens[i];
+        if (i != tokens.size() - 1) { /* Check last token. */
+            oss << ", ";
+        }
+    }
+
+    return oss.str();
 }
